@@ -50,10 +50,15 @@ namespace AdocaoApi.Models
         [Column("EnderecoNumero")]
         public string EnderecoNumero { get; set; }
 
+        [Display(Name = "Estado")]
+        [Column("Estado")]
+        public string Estado { get; set; }
+
         [Display(Name = "Moradia")]
         [Column("Moradia")]
         public string Moradia { get; set; }
 
+        //dados a respeito do pet desejado
         [Display(Name = "AnimalPreferido")]
         [Column("AnimalPreferido")]
         public string AnimalPreferido { get; set; }

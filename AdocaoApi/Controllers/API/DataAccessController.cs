@@ -30,7 +30,7 @@ namespace AdocaoApi.Controllers.API
 
         [HttpPost]
         [ActionName("CadastroAdotante")]
-        public async Task<IActionResult> CadastroAdotante([Bind("Id, Usuario, Nome, Sobrenome, Idade, Email, Celular, EnderecoCep, EnderecoNumero, Moradia, AnimalPreferido, PortePreferido, GeneroPreferido")] Adotante adotante)
+        public async Task<IActionResult> CadastroAdotante([Bind("Id, Usuario, Nome, Sobrenome, Idade, Email, Celular, EnderecoCep, EnderecoNumero, Estado, Moradia, AnimalPreferido, PortePreferido, GeneroPreferido")] Adotante adotante)
         {
             string errorMessage = "";
             if (ModelState.IsValid)
@@ -52,7 +52,7 @@ namespace AdocaoApi.Controllers.API
 
         [HttpPost]
         [ActionName("CadastroPet")]
-        public async Task<IActionResult> CadastroPet([Bind("Id, Usuario, Senha, Nome, Sobrenome, Email, Celular, EnderecoCep, EnderecoNumero, Animal, Porte, Genero, Vacinas, Raca, Cor")] Pet pet)
+        public async Task<IActionResult> CadastroPet([Bind("Id, Usuario, Senha, Nome, Sobrenome, Email, Celular, EnderecoCep, EnderecoNumero, Estado, Animal, Porte, Genero, Vacinas, Raca, Cor")] Pet pet)
         {
             string errorMessage = "";
             if (ModelState.IsValid)
@@ -88,6 +88,37 @@ namespace AdocaoApi.Controllers.API
 
                 usuario = _context.Adotante
                    .Where(s => s.Senha == adotante.Senha)
+                   .ToList();
+                if (usuario.Count == 1)
+                {
+                    return StatusCode(200, usuario[0].Id.ToString());
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return StatusCode(401, "Erro ao Autorizar, senha incorreta");
+        }
+
+        [HttpPost]
+        [ActionName("LoginTutor")]
+        public IActionResult LoginTutor(Pet pet)
+        {
+            try
+            {
+                var teste = _context.Pet.Where(s => s.Usuario == pet.Usuario);
+                var usuario = _context.Pet
+                  .Where(s => s.Usuario == pet.Usuario)
+                  .ToList();
+                if (usuario.Count == 0)
+                {
+                    return StatusCode(401, "Erro ao autorizar, usuário inválido");
+                }
+
+                usuario = _context.Pet
+                   .Where(s => s.Usuario == pet.Usuario)
+                   .Where(s => s.Senha == pet.Senha)
                    .ToList();
                 if (usuario.Count == 1)
                 {

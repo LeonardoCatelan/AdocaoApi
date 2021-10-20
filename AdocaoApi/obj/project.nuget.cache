@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "OAXgZ8enI2Uxy+GzPOKdv2bkDOIOiCCzCzBaXcpeDzBayc7dWfWePxjeBvwNopyRTueCYf8tGkcT4kzymxTUYA==",
+  "dgSpecHash": "Fp/Z3q+q/tZ0mdfjyLwbFmV+qBnRsmpIOA9+gnIOvfI2JhLjtSC/nGVARSxQU3cVct5R1Q5fKhvPe2L/TGh+7g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Leo\\Desktop\\TCC\\AdocaoApi\\AdocaoApi\\AdocaoApi.csproj",
+  "projectFilePath": "C:\\Users\\Leo\\Desktop\\TCC\\Repositorio\\AdocaoApi\\AdocaoApi\\AdocaoApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Leo\\.nuget\\packages\\bouncycastle.netcore\\1.8.3\\bouncycastle.netcore.1.8.3.nupkg.sha512",
     "C:\\Users\\Leo\\.nuget\\packages\\google.protobuf\\3.11.4\\google.protobuf.3.11.4.nupkg.sha512",

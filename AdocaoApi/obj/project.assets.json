@@ -8202,11 +8202,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Leo\\Desktop\\TCC\\AdocaoApi\\AdocaoApi\\AdocaoApi.csproj",
+      "projectUniqueName": "C:\\Users\\Leo\\Desktop\\TCC\\Repositorio\\AdocaoApi\\AdocaoApi\\AdocaoApi.csproj",
       "projectName": "AdocaoApi",
-      "projectPath": "C:\\Users\\Leo\\Desktop\\TCC\\AdocaoApi\\AdocaoApi\\AdocaoApi.csproj",
+      "projectPath": "C:\\Users\\Leo\\Desktop\\TCC\\Repositorio\\AdocaoApi\\AdocaoApi\\AdocaoApi.csproj",
       "packagesPath": "C:\\Users\\Leo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Leo\\Desktop\\TCC\\AdocaoApi\\AdocaoApi\\obj\\",
+      "outputPath": "C:\\Users\\Leo\\Desktop\\TCC\\Repositorio\\AdocaoApi\\AdocaoApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Leo\\AppData\\Roaming\\NuGet\\NuGet.Config",
