@@ -12,7 +12,7 @@ namespace AdocaoApi.Models
     {
         [Display(Name = "Id")]
         [Column("Id")]
-        public int Id { get; set; }
+        public double Id { get; set; }
 
         [Display(Name = "Usuario")]
         [Column("Usuario")]
@@ -49,6 +49,10 @@ namespace AdocaoApi.Models
         [Display(Name = "EnderecoNumero")]
         [Column("EnderecoNumero")]
         public string EnderecoNumero { get; set; }
+
+        [Display(Name = "Cidade")]
+        [Column("Cidade")]
+        public string Cidade { get; set; }
 
         [Display(Name = "Estado")]
         [Column("Estado")]

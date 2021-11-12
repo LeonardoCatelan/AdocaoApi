@@ -1,9 +1,12 @@
 ﻿using AdocaoApi.Models;
+using AdocaoApi.Requests;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AdocaoApi.Controllers.API
@@ -30,8 +33,10 @@ namespace AdocaoApi.Controllers.API
 
         [HttpPost]
         [ActionName("CadastroAdotante")]
-        public async Task<IActionResult> CadastroAdotante([Bind("Id, Usuario, Nome, Sobrenome, Idade, Email, Celular, EnderecoCep, EnderecoNumero, Estado, Moradia, AnimalPreferido, PortePreferido, GeneroPreferido")] Adotante adotante)
+        public async Task<IActionResult> CadastroAdotante([Bind("Usuario, Nome, Sobrenome, Idade, Email, Celular, EnderecoCep, EnderecoNumero, Estado, Moradia, AnimalPreferido, PortePreferido, GeneroPreferido")] Adotante adotante)
         {
+            double idAleatorio = double.Parse(DateTime.Now.ToString("ddMMyyHHmmssff"));
+            adotante.Id = idAleatorio;
             string errorMessage = "";
             if (ModelState.IsValid)
             {
@@ -52,8 +57,10 @@ namespace AdocaoApi.Controllers.API
 
         [HttpPost]
         [ActionName("CadastroPet")]
-        public async Task<IActionResult> CadastroPet([Bind("Id, Usuario, Senha, Nome, Sobrenome, Email, Celular, EnderecoCep, EnderecoNumero, Estado, Animal, Porte, Genero, Vacinas, Raca, Cor")] Pet pet)
+        public async Task<IActionResult> CadastroPet([Bind("Usuario, Senha, Nome, Sobrenome, Email, Celular, EnderecoCep, EnderecoNumero, Estado, Animal, Porte, Genero, Vacinas, Raca, Cor")] Pet pet)
         {
+            double idAleatorio = double.Parse(DateTime.Now.ToString("ddMMyyHHmmssff"));
+            pet.Id = idAleatorio;
             string errorMessage = "";
             if (ModelState.IsValid)
             {
@@ -87,6 +94,7 @@ namespace AdocaoApi.Controllers.API
                 }
 
                 usuario = _context.Adotante
+                   .Where(s => s.Usuario == adotante.Usuario)
                    .Where(s => s.Senha == adotante.Senha)
                    .ToList();
                 if (usuario.Count == 1)
@@ -107,7 +115,6 @@ namespace AdocaoApi.Controllers.API
         {
             try
             {
-                var teste = _context.Pet.Where(s => s.Usuario == pet.Usuario);
                 var usuario = _context.Pet
                   .Where(s => s.Usuario == pet.Usuario)
                   .ToList();
@@ -130,6 +137,91 @@ namespace AdocaoApi.Controllers.API
                 Console.WriteLine(e.Message);
             }
             return StatusCode(401, "Erro ao Autorizar, senha incorreta");
+        }
+
+        [HttpPost]
+        [ActionName("BuscarPet")]
+        public List<Par> BuscarPet(double id, float distanciaMaxima) 
+        {
+            //Busca os dados do usuário com base no ID enviado no request
+            var usuario = _context.Adotante
+                  .Where(s => s.Id == id)
+                  .ToList();
+
+            //Busca os pets que são da MESMA CIDADE que o usuário (rever isso depois)
+            var pets = _context.Pet
+                .Where(s => s.Estado == usuario[0].Estado.ToString())
+                .ToList();
+
+            var jose = pets.Count();
+
+            string origem = usuario[0].EnderecoCep.ToString();
+            string destino = "";
+            string apiKey = "AIzaSyAlXtXA8rnDXrWSbrwplRBSgmMa-1lK3Yw";
+            string url = "";
+            List<int> listaDistancia = new List<int>();
+
+            for(int i = 0; i < pets.Count; i++)
+            {
+                try { 
+                destino = pets[i].EnderecoCep.ToString();
+                url = $"https://maps.googleapis.com/maps/api/distancematrix/json?destinations={destino}&origins={origem}&key={apiKey}";
+
+                HttpResponseMessage response = WebRequests.Post(url);
+                string result = response.Content.ReadAsStringAsync().Result;
+                dynamic parsedBody = JObject.Parse(result);
+
+                string distanciaString = parsedBody.rows[0].elements[0].distance.value;
+                int resultDistancia = int.Parse(distanciaString);
+                
+                listaDistancia.Add(resultDistancia);
+                }
+                catch
+                {
+                    listaDistancia.Add(0);
+                }
+            }
+            float distanciaMetros = distanciaMaxima * 1000;
+
+            //lista de pares, feita dois dados, o objeto do pet encontrado, e a distancia dele pro adotante
+            List<Par> listaPares = new List<Par>();
+
+            int[] matches = new int[listaDistancia.Count];
+
+            for(int  i = 0; i < listaDistancia.Count; i++)
+            {
+                int aux = 0; //variavel de auxilio que vai ser utilizada para contabilizar as similaridades
+                if(listaDistancia[i] < distanciaMetros && listaDistancia[i] != 0)
+                {
+                    if(usuario[0].AnimalPreferido == pets[i].Animal)
+                    {
+                        aux = 3;
+                    }
+                    if (usuario[0].PortePreferido == pets[i].Porte)
+                    {
+                        aux++;
+                    }
+                    if (usuario[0].GeneroPreferido == pets[i].Genero)
+                    {
+                        aux++;
+                    }
+                    listaPares.Add
+                        (new Par 
+                            (new RetornoPet
+                                (pets[i].Id, pets[i].Usuario, pets[i].Nome, pets[i].Sobrenome, pets[i].Email, pets[i].Celular, pets[i].Animal, pets[i].Porte, pets[i].Genero, pets[i].Vacinas, pets[i].Raca, pets[i].Cor), listaDistancia[i], aux
+                            )   
+                        );
+                }
+            }
+            
+            if(listaPares.Count == 0)
+            {
+                listaPares.Add(new Par("Não foi possível encontrar nenhum pet dentro da distância desejada, por favor aumente a distância e tente novamente"));
+            }
+
+            //A fazer: Reordenação da lista com base nas preferências para retornar na ordem correta.
+            var listaOrdenada = listaPares.OrderByDescending(p => p.Matches).ToList();
+            return listaOrdenada;
         }
     }
 }

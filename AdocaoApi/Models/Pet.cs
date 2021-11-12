@@ -13,7 +13,7 @@ namespace AdocaoApi.Models
         //Dados do tutor que está cadastrando o pet
         [Display(Name = "Id")]
         [Column("Id")]
-        public int Id { get; set; }
+        public double Id { get; set; }
 
         [Display(Name = "Usuario")]
         [Column("Usuario")]
@@ -46,7 +46,11 @@ namespace AdocaoApi.Models
         [Display(Name = "EnderecoNumero")]
         [Column("EnderecoNumero")]
         public string EnderecoNumero { get; set; }
-        
+
+        [Display(Name = "Cidade")]
+        [Column("Cidade")]
+        public string Cidade { get; set; }
+
         [Display(Name = "Estado")]
         [Column("Estado")]
         public string Estado { get; set; }
@@ -75,5 +79,11 @@ namespace AdocaoApi.Models
         [Display(Name = "Cor")]
         [Column("Cor")]
         public string Cor { get; set; }
+
+        public Pet(string usuario, string senha)
+        {
+            Usuario = usuario;
+            Senha = senha;
+        }
     }
 }
