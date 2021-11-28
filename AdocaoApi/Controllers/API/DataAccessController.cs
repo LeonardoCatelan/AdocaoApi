@@ -33,7 +33,7 @@ namespace AdocaoApi.Controllers.API
 
         [HttpPost]
         [ActionName("CadastroAdotante")]
-        public async Task<IActionResult> CadastroAdotante([Bind("Usuario, Nome, Sobrenome, Idade, Email, Celular, EnderecoCep, EnderecoNumero, Estado, Moradia, AnimalPreferido, PortePreferido, GeneroPreferido")] Adotante adotante)
+        public async Task<IActionResult> CadastroAdotante([Bind("Usuario, Nome, Sobrenome, Idade, Email, Celular, EnderecoCep, Cidade, Estado, AnimalPreferido, PortePreferido, GeneroPreferido")] Adotante adotante)
         {
             double idAleatorio = double.Parse(DateTime.Now.ToString("ddMMyyHHmmssff"));
             adotante.Id = idAleatorio;
@@ -57,7 +57,7 @@ namespace AdocaoApi.Controllers.API
 
         [HttpPost]
         [ActionName("CadastroPet")]
-        public async Task<IActionResult> CadastroPet([Bind("Usuario, Senha, Nome, Sobrenome, Email, Celular, EnderecoCep, EnderecoNumero, Estado, Animal, Porte, Genero, Vacinas, Raca, Cor")] Pet pet)
+        public async Task<IActionResult> CadastroPet([Bind("Usuario, Senha, Nome, Sobrenome, Email, Celular, EnderecoCep, Cidade, Estado, Animal, Porte, Genero, Vacinas, Raca, Cor, Img")] Pet pet)
         {
             double idAleatorio = double.Parse(DateTime.Now.ToString("ddMMyyHHmmssff"));
             pet.Id = idAleatorio;
@@ -208,7 +208,7 @@ namespace AdocaoApi.Controllers.API
                     listaPares.Add
                         (new Par 
                             (new RetornoPet
-                                (pets[i].Id, pets[i].Usuario, pets[i].Nome, pets[i].Sobrenome, pets[i].Email, pets[i].Celular, pets[i].Animal, pets[i].Porte, pets[i].Genero, pets[i].Vacinas, pets[i].Raca, pets[i].Cor), listaDistancia[i], aux
+                                (pets[i].Id, pets[i].Usuario, pets[i].Nome, pets[i].Sobrenome, pets[i].Email, pets[i].Celular, pets[i].Animal, pets[i].Porte, pets[i].Genero, pets[i].Vacinas, pets[i].Raca, pets[i].Cor, pets[i].Img), listaDistancia[i], aux
                             )   
                         );
                 }

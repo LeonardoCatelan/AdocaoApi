@@ -22,10 +22,11 @@ namespace AdocaoApi.Models
         public string Vacinas { get; set; }
         public string Raca { get; set; }
         public string Cor { get; set; }
+        public string Img { get; set; }
 
         public RetornoPet(double id, string usuario, string nome, string sobrenome, 
             string email, string celular, string animal, string porte, string genero,
-            string vacinas, string raca, string cor)
+            string vacinas, string raca, string cor, string img)
         {
             Id = id;
             Usuario = usuario;
@@ -39,6 +40,7 @@ namespace AdocaoApi.Models
             Vacinas = vacinas;
             Raca = raca;
             Cor = cor;
+            Img = img;
         }
     }
 }

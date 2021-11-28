@@ -46,10 +46,6 @@ namespace AdocaoApi.Models
         [Column("EnderecoCep")]
         public string EnderecoCep { get; set; }
 
-        [Display(Name = "EnderecoNumero")]
-        [Column("EnderecoNumero")]
-        public string EnderecoNumero { get; set; }
-
         [Display(Name = "Cidade")]
         [Column("Cidade")]
         public string Cidade { get; set; }
@@ -57,10 +53,6 @@ namespace AdocaoApi.Models
         [Display(Name = "Estado")]
         [Column("Estado")]
         public string Estado { get; set; }
-
-        [Display(Name = "Moradia")]
-        [Column("Moradia")]
-        public string Moradia { get; set; }
 
         //dados a respeito do pet desejado
         [Display(Name = "AnimalPreferido")]
