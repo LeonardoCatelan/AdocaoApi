@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AdocaoApi.Controllers.API
@@ -35,6 +36,10 @@ namespace AdocaoApi.Controllers.API
         [ActionName("CadastroAdotante")]
         public async Task<IActionResult> CadastroAdotante([Bind("Usuario, Nome, Sobrenome, Idade, Email, Celular, EnderecoCep, Cidade, Estado, AnimalPreferido, PortePreferido, GeneroPreferido")] Adotante adotante)
         {
+            //criptografando a senha do usuário para armazenar no banco
+            string senhaCriptografada = CriptografarSenha.HashPassword(adotante.Senha); //criptografa a senha
+            adotante.Senha = senhaCriptografada;
+            //criando um id aleatorio para guardar no banco
             double idAleatorio = double.Parse(DateTime.Now.ToString("ddMMyyHHmmssff"));
             adotante.Id = idAleatorio;
             string errorMessage = "";
@@ -59,6 +64,9 @@ namespace AdocaoApi.Controllers.API
         [ActionName("CadastroPet")]
         public async Task<IActionResult> CadastroPet([Bind("Usuario, Senha, Nome, Sobrenome, Email, Celular, EnderecoCep, Cidade, Estado, Animal, Porte, Genero, Vacinas, Raca, Cor, Img")] Pet pet)
         {
+            //criptografando a senha do usuário para armazenar no banco
+            string senhaCriptografada = CriptografarSenha.HashPassword(pet.Senha); //criptografa a senha
+            pet.Senha = senhaCriptografada;
             double idAleatorio = double.Parse(DateTime.Now.ToString("ddMMyyHHmmssff"));
             pet.Id = idAleatorio;
             string errorMessage = "";
@@ -83,6 +91,9 @@ namespace AdocaoApi.Controllers.API
         [ActionName("LoginAdotante")]
         public IActionResult LoginAdotante(Adotante adotante)
         {
+            //criptografando a senha do usuário para comparar com a armazenada no banco
+            string senhaCriptografada = CriptografarSenha.HashPassword(adotante.Senha); //criptografa a senha
+            adotante.Senha = senhaCriptografada;
             try
             {
                 var usuario = _context.Adotante
@@ -113,6 +124,8 @@ namespace AdocaoApi.Controllers.API
         [ActionName("LoginTutor")]
         public IActionResult LoginTutor(Pet pet)
         {
+            string senhaCriptografada = CriptografarSenha.HashPassword(pet.Senha); //criptografa a senha
+            pet.Senha = senhaCriptografada;
             try
             {
                 var usuario = _context.Pet
@@ -148,7 +161,7 @@ namespace AdocaoApi.Controllers.API
                   .Where(s => s.Id == id)
                   .ToList();
 
-            //Busca os pets que são da MESMA CIDADE que o usuário (rever isso depois)
+            //Busca os pets que são do mesmo estado que o usuário (google = max de 50000 solicitações de projeto por dia)
             var pets = _context.Pet
                 .Where(s => s.Estado == usuario[0].Estado.ToString())
                 .ToList();
@@ -163,7 +176,8 @@ namespace AdocaoApi.Controllers.API
 
             for(int i = 0; i < pets.Count; i++)
             {
-                try { 
+                try {
+                //Thread.Sleep(50); Se estourar o número de requisições por segundo da API do google, ligar esse thread sleep e ajustar o tempo de acordo
                 destino = pets[i].EnderecoCep.ToString();
                 url = $"https://maps.googleapis.com/maps/api/distancematrix/json?destinations={destino}&origins={origem}&key={apiKey}";
 
@@ -205,10 +219,11 @@ namespace AdocaoApi.Controllers.API
                     {
                         aux++;
                     }
+                    int distanciaKM = listaDistancia[i] / 1000;
                     listaPares.Add
                         (new Par 
                             (new RetornoPet
-                                (pets[i].Id, pets[i].Usuario, pets[i].Nome, pets[i].Sobrenome, pets[i].Email, pets[i].Celular, pets[i].Animal, pets[i].Porte, pets[i].Genero, pets[i].Vacinas, pets[i].Raca, pets[i].Cor, pets[i].Img), listaDistancia[i], aux
+                                (pets[i].Id, pets[i].Usuario, pets[i].Nome, pets[i].Sobrenome, pets[i].Email, pets[i].Celular, pets[i].Animal, pets[i].Porte, pets[i].Genero, pets[i].Vacinas, pets[i].Raca, pets[i].Cor, pets[i].Img), distanciaKM, aux
                             )   
                         );
                 }
@@ -219,7 +234,7 @@ namespace AdocaoApi.Controllers.API
                 listaPares.Add(new Par("Não foi possível encontrar nenhum pet dentro da distância desejada, por favor aumente a distância e tente novamente"));
             }
 
-            //A fazer: Reordenação da lista com base nas preferências para retornar na ordem correta.
+            //Ordena a lista por matches.
             var listaOrdenada = listaPares.OrderByDescending(p => p.Matches).ToList();
             return listaOrdenada;
         }
