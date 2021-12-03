@@ -135,3 +135,4 @@ C:\Users\Leo\Desktop\TCC\Repositorio\AdocaoApi\AdocaoApi\obj\Release\net5.0\Adoc
 C:\Users\Leo\Desktop\TCC\Repositorio\AdocaoApi\AdocaoApi\obj\Release\net5.0\ref\AdocaoApi.dll
 C:\Users\Leo\Desktop\TCC\Repositorio\AdocaoApi\AdocaoApi\obj\Release\net5.0\AdocaoApi.pdb
 C:\Users\Leo\Desktop\TCC\Repositorio\AdocaoApi\AdocaoApi\obj\Release\net5.0\AdocaoApi.genruntimeconfig.cache
+C:\Users\Leo\Desktop\TCC\Repositorio\AdocaoApi\AdocaoApi\obj\Release\net5.0\AdocaoApi.csproj.AssemblyReference.cache

@@ -93,7 +93,6 @@ namespace AdocaoApi.Controllers.API
         {
             //criptografando a senha do usuário para comparar com a armazenada no banco
             string senhaCriptografada = CriptografarSenha.HashPassword(adotante.Senha); //criptografa a senha
-            adotante.Senha = senhaCriptografada;
             try
             {
                 var usuario = _context.Adotante
@@ -106,7 +105,7 @@ namespace AdocaoApi.Controllers.API
 
                 usuario = _context.Adotante
                    .Where(s => s.Usuario == adotante.Usuario)
-                   .Where(s => s.Senha == adotante.Senha)
+                   .Where(s => s.Senha == senhaCriptografada)
                    .ToList();
                 if (usuario.Count == 1)
                 {
@@ -125,7 +124,6 @@ namespace AdocaoApi.Controllers.API
         public IActionResult LoginTutor(Pet pet)
         {
             string senhaCriptografada = CriptografarSenha.HashPassword(pet.Senha); //criptografa a senha
-            pet.Senha = senhaCriptografada;
             try
             {
                 var usuario = _context.Pet
@@ -138,7 +136,7 @@ namespace AdocaoApi.Controllers.API
 
                 usuario = _context.Pet
                    .Where(s => s.Usuario == pet.Usuario)
-                   .Where(s => s.Senha == pet.Senha)
+                   .Where(s => s.Senha == senhaCriptografada)
                    .ToList();
                 if (usuario.Count == 1)
                 {
